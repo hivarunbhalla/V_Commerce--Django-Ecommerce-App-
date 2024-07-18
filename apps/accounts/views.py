@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
+from .models import Profile
 
 def login_view(request):
 
@@ -63,5 +64,12 @@ def register_page(request):
     return render(request=request, template_name= 'accounts/register.html')
 
 
-def activate_email(request):
-    pass
+def activate_email(request, email_token):
+    try:
+        user = Profile.objects.get(email_token= email_token)
+        user.is_email_verified = True
+        user.save()
+        return redirect('/')
+    
+    except Exception as e:
+        return HttpResponse('Invalid Email token')
