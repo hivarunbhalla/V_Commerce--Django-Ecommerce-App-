@@ -41,9 +41,10 @@ INSTALLED_APPS = [
 
     # CUSTOM APPS
     'apps.accounts',
-    'apps.products',
     'apps.orders',
+    'apps.pages',
     'apps.payments',
+    'apps.products',
 ]
 
 MIDDLEWARE = [

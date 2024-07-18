@@ -7,10 +7,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
 urlpatterns = [
-    # path('' , include('apps.home.urls') ),
-    path('product/' , include('apps.products.urls') ),
-    path('accounts/' , include('apps.accounts.urls') ),
     path('admin/', admin.site.urls),
+    path('accounts/', include('apps.accounts.urls')),
+    path('orders/', include('apps.orders.urls')),
+    path('', include('apps.pages.urls')), 
+    path('payments/', include('apps.payments.urls')),
+    path('products/', include('apps.products.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

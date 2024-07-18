@@ -6,6 +6,18 @@ from django.http import HttpResponseRedirect, HttpResponse
 
 from .models import Profile
 
+
+def activate_email(request, email_token):
+    try:
+        user = Profile.objects.get(email_token= email_token)
+        user.is_email_verified = True
+        user.save()
+        return redirect('/')
+    
+    except Exception as e:
+        return HttpResponse('Invalid Email token')
+    
+
 def login_view(request):
 
     if request.method == 'POST':
@@ -31,6 +43,17 @@ def login_view(request):
         messages.warning(request, "Invalid Credentials")
 
     return render(request=request, template_name= 'accounts/login.html')
+
+
+# def logout_view(request):
+#     # Your logout logic here
+#     logout(request)
+#     return redirect('home')
+
+
+# def profile_view(request):
+#     # Your profile logic here
+#     return render(request, 'accounts/profile.html')
 
 
 def register_page(request):
@@ -63,13 +86,3 @@ def register_page(request):
 
     return render(request=request, template_name= 'accounts/register.html')
 
-
-def activate_email(request, email_token):
-    try:
-        user = Profile.objects.get(email_token= email_token)
-        user.is_email_verified = True
-        user.save()
-        return redirect('/')
-    
-    except Exception as e:
-        return HttpResponse('Invalid Email token')
