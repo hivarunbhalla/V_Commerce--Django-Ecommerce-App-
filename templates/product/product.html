@@ -50,27 +50,18 @@
             <!-- Variant Selection -->
             <div class="form-row">
               <!-- Quantity Picker -->
-              <div class="form-group col-md flex-grow-0">
-                {% include "components/quantity_picker.html" %}
+              <div class="form-group col-md flex-grow-10">
+                {% include "components/products/quantity_picker.html" %}
               </div>
               
               <!-- Size Variants -->
               {% if size_variants %}
-                <div class="form-group col-md">
-                  <label>Select size</label>
-                  <div class="mt-1">
-                    {% for size in size_variants %}
-                      <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" name="select_size" class="custom-control-input variant-select" data-type="size" value="{{ size.size_name }}" {% if forloop.first %}checked{% endif %} />
-                        <div class="custom-control-label">{{ size.size_name }}</div>
-                      </label>
-                    {% endfor %}
-                  </div>
-                </div>
+                {% include "components/products/size_varients.html" %}
               {% endif %}
-                <h  r/>
-              
+                
+            </div>
             
+              
             <!-- Action Buttons -->
             <div class = "axtion-buttons button">
             {% include "components/buttons/buy_now.html" %}
