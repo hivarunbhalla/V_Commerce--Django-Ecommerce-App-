@@ -1,111 +1,136 @@
-{% extends "base/base.html"%}
-
-{%  block start %}
+{% extends "base/base.html" %}
+{% block start %}
 
 <section class="section-content padding-y bg">
-    <div class="container">
-    
-    <!-- ============================ COMPONENT 1 ================================= -->
+  <div class="container">
     <div class="card">
-        <div class="row no-gutters">
-            <aside class="col-md-6">
-    <article class="gallery-wrap"> 
-    <div class="img-big-wrap">
-      <div> <a href="#"><img src="/media/{{product.product_images.first.image}}"></a></div>
-    </div> <!-- slider-product.// -->
-    <div class="thumbs-wrap">
-      {% for image in product.product_images.all %}
-      <a href="#" class="item-thumb"> <img src="/media/{{image.image}}"></a>
-      
-      {% endfor %}
-
-    </div> <!-- slider-nav.// -->
-    </article> <!-- gallery-wrap .end// -->
-            </aside>
-            <main class="col-md-6 border-left">
-    <article class="content-body">
-    
-    <h2 class="title">{{product.product_title}}</h2>
-    
-    <div class="rating-wrap my-3">
-        <ul class="rating-stars">
-            <li style="width:80%" class="stars-active"> 
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
-                <i class="fa fa-star"></i> 
-            </li>
-            <li>
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
-                <i class="fa fa-star"></i> 
-            </li>
-        </ul>
-        <small class="label-rating text-muted">132 reviews</small>
-        <small class="label-rating text-success"> <i class="fa fa-clipboard-check"></i> 154 orders </small>
-    </div> <!-- rating-wrap.// -->
-    
-    <div class="mb-3"> 
-        <var class="price h4">${{product.product_price}}.00</var> 
-        <span class="text-muted">/per kg</span> 
-    </div> <!-- price-detail-wrap .// -->
-    
-    <p>{{product.product_desription}}</p>
-    
-    
-    <dl class="row">
-      <dt class="col-sm-3">Model#</dt>
-      <dd class="col-sm-9">Odsy-1000</dd>
-    
-      <dt class="col-sm-3">Color</dt>
-      <dd class="col-sm-9">Brown</dd>
-    
-      <dt class="col-sm-3">Delivery</dt>
-      <dd class="col-sm-9">Russia, USA, and Europe </dd>
-    </dl>
-    
-    <hr>
-        <div class="form-row">
-            <div class="form-group col-md flex-grow-0">
-                <label>Quantity</label>
-                <div class="input-group mb-3 input-spinner">
-                  <div class="input-group-prepend">
-                    <button class="btn btn-light" type="button" id="button-plus"> + </button>
-                  </div>
-                  <input type="text" class="form-control" value="1">
-                  <div class="input-group-append">
-                    <button class="btn btn-light" type="button" id="button-minus"> − </button>
+      <div class="row no-gutters">
+        <!-- Image Gallery Section -->
+        <aside class="col-md-6">
+          <article class="gallery-wrap">
+            <div class="img-big-wrap">
+              <div>
+                <a href="#" id="main-image-link">
+                  <img id="main-image" src="/media/{{ product.product_images.first.image }}" alt="{{ product.product_title }}" />
+                </a>
+              </div>
+            </div>
+            <!-- Thumbnail Navigation -->
+            <div class="thumbs-wrap">
+              {% for image in product.product_images.all %}
+                <a href="#" class="item-thumb" data-image="/media/{{ image.image }}">
+                  <img src="/media/{{ image.image }}" alt="Thumbnail Image" />
+                </a>
+              {% endfor %}
+            </div>
+          </article>
+        </aside>
+        
+        <!-- Product Details Section -->
+        <main class="col-md-6 border-left">
+          <article class="content-body">
+            <!-- Product Title -->
+            <h2 class="title">{{ product.product_title }}</h2>
+            
+            <!-- Product Rating -->
+            {% include "components/reviews/rating.html" %}
+            
+            <!-- Product Price -->
+            <div class="mb-3">
+              <var class="price h4">$<span id="product-price">{{ variant_price }}</span></var>
+            </div>
+            
+            <!-- Product Description -->
+            {% if product.product_description %}
+              <p>{{ product.product_description }}</p>
+            {% endif %}
+            
+            <hr />
+            
+            <!-- Variant Selection -->
+            <div class="form-row">
+              <!-- Quantity Picker -->
+              <div class="form-group col-md flex-grow-0">
+                {% include "components/quantity_picker.html" %}
+              </div>
+              
+              <!-- Size Variants -->
+              {% if size_variants %}
+                <div class="form-group col-md">
+                  <label>Select size</label>
+                  <div class="mt-1">
+                    {% for size in size_variants %}
+                      <label class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" name="select_size" class="custom-control-input variant-select" data-type="size" value="{{ size.size_name }}" {% if forloop.first %}checked{% endif %} />
+                        <div class="custom-control-label">{{ size.size_name }}</div>
+                      </label>
+                    {% endfor %}
                   </div>
                 </div>
-            </div> <!-- col.// -->
-            {% if product.size_variant.count %}
-            <div class="form-group col-md">
-                    <label>Select size</label>
-                    <div class="mt-1">
-                      {% for size in product.size_variant.all %}
-                      
-                        <label class="custom-control custom-radio custom-control-inline">
-                          <input type="radio" name="select_size" checked="" class="custom-control-input">
-                          <div class="custom-control-label">{{size.size_name}}</div>
-                        </label>
-    
-                      {% endfor %}
-    
-                    </div>
-            </div>
-            {% endif %}
-            <!-- col.// -->
-        </div> <!-- row.// -->
-    
-        <a href="#" class="btn  btn-primary"> Buy now </a>
-        <a href="#" class="btn  btn-outline-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>
-    </article> <!-- product-info-aside .// -->
-            </main> <!-- col.// -->
-        </div> <!-- row.// -->
-    </div> <!-- card.// -->
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
-    
+              {% endif %}
+                <h  r/>
+              
+            
+            <!-- Action Buttons -->
+            <div class = "axtion-buttons button">
+            {% include "components/buttons/buy_now.html" %}
+            {% include "components/buttons/add_to_cart.html" %}
+            </div> 
 
+          </article>
+        </main>
+      </div>
     </div>
-    </section>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Image gallery functionality
+  const mainImage = document.getElementById('main-image');
+  const mainImageLink = document.getElementById('main-image-link');
+  const thumbnails = document.querySelectorAll('.item-thumb');
+
+  thumbnails.forEach(thumb => {
+    thumb.addEventListener('click', function(e) {
+      e.preventDefault();
+      const newImageSrc = this.getAttribute('data-image');
+      mainImage.src = newImageSrc;
+      mainImageLink.href = newImageSrc;
+    });
+  });
+
+  // Variant selection and price update
+  const variantSelects = document.querySelectorAll('.variant-select');
+  const priceElement = document.getElementById('product-price');
+
+  variantSelects.forEach(select => {
+    select.addEventListener('change', function() {
+      updatePrice();
+    });
+  });
+
+  function updatePrice() {
+    const selectedColor = document.querySelector('input[name="select_color"]:checked');
+    const selectedSize = document.querySelector('input[name="select_size"]:checked');
+
+    const color = selectedColor ? selectedColor.value : '';
+    const size = selectedSize ? selectedSize.value : '';
+
+    fetch(`?color=${color}&size=${size}`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      priceElement.textContent = data.price.toFixed(2);
+    });
+  }
+
+  // Trigger initial price update
+  updatePrice();
+});
+</script>
 
 {% endblock %}
