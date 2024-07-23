@@ -44,9 +44,9 @@ $(document).ready(function() {
 		<nav class="navbar navbar-dark navbar-expand p-0 bg-dark">
 		<div class="container">
 			<ul class="navbar-nav d-none d-md-flex mr-auto">
-				<li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Delivery</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Payment</a></li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'product_list' %}">Products</a></li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'category_list' %}">Categories</a></li>
 			</ul>
 			<ul class="navbar-nav">
 				<li class="nav-item"><a href="#" class="nav-link"> Call: +99812345678 </a></li>
@@ -67,8 +67,10 @@ $(document).ready(function() {
 		<div class="row align-items-center">
 			<div class="col-lg-2 col-4">
 				<div class="brand-wrap">
-					<img class="logo" src="/static/images/logo.png">
-				</div> <!-- brand-wrap.// -->
+    <a href="{% url 'home' %}" target="_blank">
+        <img class="logo" src="/static/images/logo.png" alt="Logo">
+    </a>
+</div> <!-- brand-wrap.// -->
 			</div>
 			<div class="col-lg-6 col-sm-12">
 				<form action="#" class="search">
@@ -85,15 +87,16 @@ $(document).ready(function() {
 			<div class="col-lg-4 col-sm-6 col-8">
 				<div class="widgets-wrap float-md-right">
 					<div class="widget-header  mr-3">
-						<a href="#" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
-						<span class="badge badge-pill badge-danger notify">0</span>
+						<a href="{% url 'cart_view'%}" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
+						
 					</div>
 					<div class="widget-header icontext">
-						<a href="#" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
+						<a href="{% url 'login' %}" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
 						<div class="text">
 							<span class="text-muted">Welcome!</span>
 							<div> 
-								<a href="{% url 'login'%}">Sign in</a> |  
+								{% comment %} <a href="{% url 'login' %}">Sign in</a> |   {% endcomment %}
+								<a href="{% url 'login' %}">Sign in</a>
 								<a href="{% url 'register'%}"> Register</a>
 							</div>
 						</div>

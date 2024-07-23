@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
+from django.core.validators import RegexValidator
 from apps.base.models import BaseModel
 from django.utils.text import slugify
 
@@ -22,8 +22,6 @@ class Category(BaseModel):
 
 
     
-
-
 class Product(BaseModel):
     sku_validator = RegexValidator(
         regex=r'^[a-zA-Z0-9_-]*$',
@@ -45,6 +43,8 @@ class Product(BaseModel):
         self.slug = slugify(self.product_title)
         super(Product, self).save(*args, **kwargs)
 
+
+# LEARN : https://stackoverflow.com/questions/61647633/how-to-show-variations-sizes-of-products-in-django-admin
 
 class SizeVariant(models.Model):
     sku_validator = RegexValidator(

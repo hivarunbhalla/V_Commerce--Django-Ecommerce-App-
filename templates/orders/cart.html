@@ -7,18 +7,27 @@
   <div class="container">
     <div class="row">
       <main class="col-md-9">
+      {% if cart_items %}
         <div class="card">
+        
           {% include "components/orders/cart_items_table.html" %}
 
           <div class="card-body border-top">
             <a href="#" class="btn btn-primary float-md-right">
               Make Purchase <i class="fa fa-chevron-right"></i>
             </a>
-            <a href="#" class="btn btn-light">
+            <a href="/home" class="btn btn-light">
               <i class="fa fa-chevron-left"></i> Continue shopping
             </a>
           </div>
         </div>
+        {% else %}
+        <h2>Your Cart is Empty</h2>
+        <a href="/home" class="btn btn-light">
+              <i class="fa fa-chevron-left"></i> Continue shopping
+            </a>
+
+        {% endif %}
         <!-- card.// -->
 
         <div class="alert alert-success mt-3">
@@ -51,20 +60,23 @@
           </div>
           <!-- card-body.// -->
         </div>
-        <!-- card .// -->
+
+
+
+        <!-- card below coupons.// -->
         <div class="card">
           <div class="card-body">
             <dl class="dlist-align">
               <dt>Total price:</dt>
-              <dd class="text-right">USD 568</dd>
+              <dd class="text-right">INR {{ total_price }}</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Discount:</dt>
-              <dd class="text-right">USD 658</dd>
+              <dd class="text-right">INR {{ total_price }}</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Total:</dt>
-              <dd class="text-right h5"><strong>$1,650</strong></dd>
+              <dd class="text-right h5"><strong>INR {{ total_price }}</strong></dd>
             </dl>
             <hr />
             <p class="text-center mb-3">

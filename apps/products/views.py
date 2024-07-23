@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from .models import Product, SizeVariant
+from .models import Product, SizeVariant, Category
 
 def get_product(request, slug):
     product = get_object_or_404(Product, slug=slug)
@@ -25,3 +25,17 @@ def get_product(request, slug):
         return JsonResponse({'price': float(variant_price)})
     
     return render(request, 'product/product.html', context)
+
+def product_list(request):
+    products = Product.objects.all()
+    context = {
+        'products' : products
+    }
+    return render(request, 'product/all_list.html', context)
+
+def category_list(request):
+    categories = Category.objects.all()
+    context = {
+        'categories' : categories
+    }
+    return render(request, 'product/all_list.html', context)
