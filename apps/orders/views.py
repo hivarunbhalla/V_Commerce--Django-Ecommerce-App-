@@ -16,8 +16,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from .models import Cart, CartItem, Order, OrderItem, Product
 
+from apps.promotions.models import Coupon
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, uid=product_id)
@@ -59,15 +62,58 @@ def update_cart(request, cart_item_id):
 
 def cart_view(request):
     cart_id = request.session.get('cart_id')
-    cart = get_object_or_404(Cart, uid=cart_id) if cart_id else None
-    cart_items = cart.cart_items.all() if cart else None
-    total_price = sum(item.quantity * item.product.product_price for item in cart_items)
+    cart_obj = get_object_or_404(Cart, uid=cart_id) if cart_id else None
+    cart_items = cart_obj.cart_items.all() if cart_obj else None
+    # total_price_before_coupon = sum(item.quantity * item.product.product_price for item in cart_items)
 
+    if request.method == 'POST':
+        code = request.POST.get('coupon-code')
+        try:
+            coupon = Coupon.objects.get(code=code)
+
+            if cart_obj.coupon == coupon:
+                messages.warning(request, "This coupon is already applied!")
+            elif not coupon.is_valid():
+                messages.warning(request, "Invalid Coupon!")
+            else:
+                cart_obj.coupon = coupon
+                cart_obj.save()
+                messages.success(request, "Coupon Applied🎉!")
+
+        except Coupon.DoesNotExist:
+            messages.warning(request, "Invalid Coupon!")
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
+       
+    
     context = {
         'cart_items': cart_items,
-        'total_price': total_price
+        'coupon' : cart_obj.coupon.code,
         }
+    context.update(get_prices(request, cart_obj))
+    
     return render(request, 'orders/cart.html', context=context)
+
+def get_prices(request, cart_obj):
+    cart_items = cart_obj.cart_items.all() if cart_obj else []
+    before_coupon_price = sum(item.quantity * item.product.product_price for item in cart_items)
+    discount = 0
+    final_price = before_coupon_price
+
+    if cart_obj and cart_obj.coupon:
+        if cart_obj.coupon.minimum_amount <= before_coupon_price:
+            discount = cart_obj.coupon.apply_discount(before_coupon_price)
+            final_price = before_coupon_price - discount
+        else:
+            messages.warning(request, "Minimum purchase amount not reached for coupon.")
+            final_price = before_coupon_price
+
+    return {
+        'total_price_before_discount': before_coupon_price,
+        'discount': discount,
+        'total_price_after_discount': final_price
+    }
+
 
 # Order Views
 

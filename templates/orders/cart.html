@@ -41,22 +41,28 @@
       <aside class="col-md-3">
         <div class="card mb-3">
           <div class="card-body">
-            <form>
+            <form method="POST">
+              {% csrf_token %}
+              {% include "base/alert.html" %}
+              
               <div class="form-group">
                 <label>Have coupon?</label>
                 <div class="input-group">
                   <input
                     type="text"
                     class="form-control"
-                    name=""
+                    name="coupon-code"
                     placeholder="Coupon code"
                   />
                   <span class="input-group-append">
-                    <button class="btn btn-primary">Apply</button>
+                    <button type="submit" class="btn btn-primary">Apply</button>
                   </span>
                 </div>
               </div>
             </form>
+            {% if coupon %}
+            Applied Coupon: <strong> {{ coupon }} </strong>
+            {% endif %}
           </div>
           <!-- card-body.// -->
         </div>
@@ -68,15 +74,15 @@
           <div class="card-body">
             <dl class="dlist-align">
               <dt>Total price:</dt>
-              <dd class="text-right">INR {{ total_price }}</dd>
+              <dd class="text-right">INR {{ total_price_before_discount }}</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Discount:</dt>
-              <dd class="text-right">INR {{ total_price }}</dd>
+              <dd class="text-right">INR {{ discount }}</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Total:</dt>
-              <dd class="text-right h5"><strong>INR {{ total_price }}</strong></dd>
+              <dd class="text-right h5"><strong>INR {{ total_price_after_discount }}</strong></dd>
             </dl>
             <hr />
             <p class="text-center mb-3">
