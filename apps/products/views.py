@@ -1,26 +1,33 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from .models import Product, SizeVariant, Category
+from .models import Product, Category
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from .models import Product
 
 def get_product(request, slug):
     product = get_object_or_404(Product, slug=slug)
-    size_variants = product.size_variants.all()
+    variants = product.variants.all()
 
-    # Get the selected variant prices
-    selected_size = request.GET.get('size')
-    
+    # Determine the initially selected variant
+    selected_variant_uid = request.GET.get('variant_uid')
+    initial_variant = variants.first()
+
     variant_price = product.product_price
-    if selected_size:
-        size_variant = size_variants.filter(size_name=selected_size).first()
-        if size_variant:
-            variant_price = size_variant.varient_price
+    if selected_variant_uid:
+        variant = variants.filter(uid=selected_variant_uid).first()
+        if variant:
+            variant_price = variant.varient_price
+    elif initial_variant:
+        variant_price = initial_variant.varient_price
 
     context = {
         'product': product,
-        'size_variants': size_variants,
+        'variants': variants,
         'variant_price': variant_price,
     }
-    
+
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'price': float(variant_price)})
     

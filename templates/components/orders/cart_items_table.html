@@ -15,7 +15,7 @@
         <figure class="itemside">
           <div class="aside">
             <img
-              src="/media/{{ cart_item.product.product_images.first.image }}"
+              src="/media/{{ cart_item.product.images.first.image }}"
               class="img-sm"
             />
           </div>
@@ -24,7 +24,8 @@
               >{{ cart_item.product.product_title }}</a
             >
             <p class="text-muted small">
-              Size: {{ cart_item.product.size_variants }}
+              Size: {{ cart_item.variant.size }} </br>
+              Color: {{ cart_item.variant.color }}
             </p>
           </figcaption>
         </figure>
@@ -52,7 +53,7 @@
           <var class="price">{{ cart_item.total_price }}</var>
           <!-- Add variant price here if needed -->
           <small class="text-muted"
-            >{{ cart_item.product.product_price }}</small
+            >{{ cart_item.variant.varient_price }}</small
           >
         </div>
       </td>

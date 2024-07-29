@@ -2,15 +2,15 @@
   <div class="card">
     <div class="card-body d-flex">
       <div class="form-inline d-inline-flex mr-auto">
-        <labe
-          >Category
+        <label>
+          Category
           <select class="ml-2 form-control">
             <option>Clothes</option>
             <option>Electronics</option>
             <option>Home Items</option>
             <option>Foods</option>
           </select>
-        </labe>
+        </label>
       </div>
       <div class="btn-group" role="group" aria-label="Filter by">
         <button type="button" class="btn btn-outline-primary active">
@@ -30,60 +30,43 @@
             <h5 class="card-title">Product type</h5>
             <ul class="list-menu">
               <li>
-                <a href="#"
-                  >People
-                  <span class="badge badge-pill badge-light float-right"
-                    >120</span
-                  >
+                <a href="#">
+                  People
+                  <span class="badge badge-pill badge-light float-right">120</span>
                 </a>
               </li>
               <li>
-                <a href="#"
-                  >Watches
-                  <span class="badge badge-pill badge-light float-right"
-                    >42</span
-                  >
+                <a href="#">
+                  Watches
+                  <span class="badge badge-pill badge-light float-right">42</span>
                 </a>
               </li>
               <li>
-                <a href="#"
-                  >Cinema
-                  <span class="badge badge-pill badge-light float-right"
-                    >16</span
-                  >
+                <a href="#">
+                  Cinema
+                  <span class="badge badge-pill badge-light float-right">16</span>
                 </a>
               </li>
               <li>
-                <a href="#"
-                  >Clothes
-                  <span class="badge badge-pill badge-light float-right"
-                    >87</span
-                  >
+                <a href="#">
+                  Clothes
+                  <span class="badge badge-pill badge-light float-right">87</span>
                 </a>
               </li>
               <li>
-                <a href="#"
-                  >Home items
-                  <span class="badge badge-pill badge-light float-right"
-                    >34</span
-                  ></a
-                >
+                <a href="#">
+                  Home items
+                  <span class="badge badge-pill badge-light float-right">34</span></a>
               </li>
               <li>
-                <a href="#"
-                  >Animals
-                  <span class="badge badge-pill badge-light float-right"
-                    >7</span
-                  ></a
-                >
+                <a href="#">
+                  Animals
+                  <span class="badge badge-pill badge-light float-right">7</span></a>
               </li>
               <li>
-                <a href="#"
-                  >People
-                  <span class="badge badge-pill badge-light float-right"
-                    >12</span
-                  ></a
-                >
+                <a href="#">
+                  People
+                  <span class="badge badge-pill badge-light float-right">12</span></a>
               </li>
             </ul>
           </div>
@@ -106,16 +89,14 @@
               <input type="checkbox" checked="" class="custom-control-input" />
               <div class="custom-control-label text-warning">
                 <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
               </div>
             </label>
 
             <label class="custom-control custom-checkbox">
               <input type="checkbox" checked="" class="custom-control-input" />
               <div class="custom-control-label text-warning">
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
               </div>
             </label>
 
@@ -131,75 +112,17 @@
 
       <div class="col-md-9">
         <div class="row">
+          {% for product in products %}
           <div class="col-md-4">
             <figure class="card card-product-grid">
-              <div class="img-wrap"><img src="../images/items/5.jpg" /></div>
+              <div class="img-wrap"><img src="/media/{{ product.product_images.first.image }}" /></div>
               <figcaption class="info-wrap border-top">
-                <a href="#" class="title">Bell &amp; Ross Nightlum</a>
-                <div class="price mt-2">$299.00</div>
-                <!-- price-wrap.// -->
+                <a href="{% url 'get_product' product.slug %}" class="title">{{ product.product_title }}</a>
+                <div class="price mt-2">Rs. {{ product.product_price }}</div>
               </figcaption>
             </figure>
-            <!-- card // -->
           </div>
-          <!-- col.// -->
-          <div class="col-md-4">
-            <figure class="card card-product-grid">
-              <div class="img-wrap">
-                <img src="../images/items/6.jpg" />
-                <span class="topbar">
-                  <a href="#" class="float-right"
-                    ><i class="fa fa-heart"></i
-                  ></a>
-                </span>
-                <a class="btn-overlay" href="#"
-                  ><i class="fa fa-search-plus"></i> Quick view</a
-                >
-              </div>
-              <figcaption class="info-wrap border-top">
-                <a href="#" class="title">Leather Sleeve - Macbook 13’’</a>
-                <div class="price mt-2">$3753.00</div>
-                <!-- price-wrap.// -->
-              </figcaption>
-            </figure>
-            <!-- card // -->
-          </div>
-          <!-- col.// -->
-          <div class="col-md-4">
-            <figure class="card card-product-grid">
-              <div class="img-wrap">
-                <span class="topbar">
-                  <span class="badge badge-success"> NEW </span>
-                </span>
-                <img src="../images/items/7.jpg" />
-              </div>
-              <figcaption class="info-wrap border-top">
-                <a href="#" class="title">H&amp;M Polo Shirt Slim Fit</a>
-                <div class="price-wrap mt-2">
-                  <span class="price">$12.99</span>
-                  <small class="price-old">$14.99</small>
-                </div>
-                <!-- price-wrap.// -->
-              </figcaption>
-            </figure>
-            <!-- card // -->
-          </div>
-          <!-- col.// -->
-          <div class="col-md-4">
-            <figure class="card card-product-grid">
-              <div class="img-wrap">
-                <img src="../images/items/1.jpg" />
-              </div>
-              <figcaption class="info-wrap border-top text-center">
-                <small class="text-uppercase font-weight-bolder text-warning"
-                  >ELECTRONICS</small
-                >
-                <p><a href="#" class="title">IKEA Poäng Swivel Chair</a></p>
-              </figcaption>
-            </figure>
-            <!-- card // -->
-          </div>
-          <!-- col.// -->
+          {% endfor %}
         </div>
       </div>
     </div>

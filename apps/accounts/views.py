@@ -45,15 +45,12 @@ def login_view(request):
     return render(request=request, template_name= 'accounts/login.html')
 
 
-# def logout_view(request):
-#     # Your logout logic here
-#     logout(request)
-#     return redirect('home')
 
 
-# def profile_view(request):
-#     # Your profile logic here
-#     return render(request, 'accounts/profile.html')
+def profile_view(request):
+    # Your profile logic here
+    return HttpResponse("Hello, this page is under maintanance")
+    return render(request, 'accounts/profile.html')
 
 
 def register_page(request):

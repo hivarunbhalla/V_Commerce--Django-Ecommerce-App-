@@ -1,0 +1,67 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+
+{% block start %}
+
+<div class="container mt-5">
+        <h1 class="mb-4">Order Details</h1>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Order #{{ order.uid }}</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+                <p><strong>Date:</strong> {{ order.created_at|date:"F d, Y H:i" }}</p>
+                <p><strong>Customer:</strong> {{ order.user.username|default:"Guest" }}</p>
+                <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+                {% if order.billing_address %}
+                    <p><strong>Billing Address:</strong> {{ order.billing_address }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <h2 class="mb-3">Order Items</h2>
+        {% comment %} <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>SKU</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.orderitems.all %}
+                    <tr>
+                        <td>{{ item.product_name }}</td>
+                        <td>{{ item.product_sku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price }}</td>
+                        <td>${{ item.subtotal }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table> {% endcomment %}
+
+        {% include "components/orders/order_items_table.html" %}
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Order Summary</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Subtotal:</strong> ${{ order.subtotal }}</p>
+                {% if order.coupon %}
+                    <p><strong>Coupon Applied:</strong> {{ order.coupon.code }} ({{ order.coupon.get_discount_display }})</p>
+                    <p><strong>Discount:</strong> ${{ order.discount_amount }}</p>
+                {% endif %}
+                <h4><strong>Total:</strong> ${{ order.discounted_total }}</h4>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock start %}

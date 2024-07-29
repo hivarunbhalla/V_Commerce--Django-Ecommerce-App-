@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
-{% block start %}
 
+{% block start %}
 <section class="section-content padding-y bg">
   <div class="container">
     <div class="card">
@@ -11,15 +11,15 @@
             <div class="img-big-wrap">
               <div>
                 <a href="#" id="main-image-link">
-                  <img id="main-image" src="/media/{{ product.product_images.first.image }}" alt="{{ product.product_title }}" />
+                  <img id="main-image" src="/media/{{ product.images.first.image }}" alt="{{ product.product_title }}" />
                 </a>
               </div>
             </div>
             <!-- Thumbnail Navigation -->
             <div class="thumbs-wrap">
-              {% for image in product.product_images.all %}
+              {% for image in product.images.all %}
                 <a href="#" class="item-thumb" data-image="/media/{{ image.image }}">
-                  <img src="/media/{{ image.image }}" alt="Thumbnail Image" />
+                  <img src="/media/{{ image.image }}" alt="{{ image.alt_text }}" />
                 </a>
               {% endfor %}
             </div>
@@ -47,27 +47,33 @@
             
             <hr />
             
-            <!-- Variant Selection -->
             <div class="form-row">
               <!-- Quantity Picker -->
               <div class="form-group col-md flex-grow-10">
                 {% include "components/products/quantity_picker.html" %}
               </div>
               
-              <!-- Size Variants -->
-              {% if size_variants %}
-                {% include "components/products/size_varients.html" %}
-              {% endif %}
-                
+              <!-- Variants Selection -->
+              <div class="form-group col-md">
+                <label>Variants</label>
+                <div class="mt-1">
+                  {% for variant in variants %}
+                    <label class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" name="selected_variant" class="custom-control-input variant-select" 
+                             data-variant-id="{{ variant.uid }}" value="{{ variant.uid }}" 
+                             {% if forloop.first %}checked{% endif %} />
+                      <div class="custom-control-label">{{ variant.size.name }} - {{ variant.color.name }}</div>
+                    </label>
+                  {% endfor %}
+                </div>
+              </div>
             </div>
             
-              
             <!-- Action Buttons -->
-            <div class = "axtion-buttons button">
-            {% include "components/buttons/buy_now.html" %}
-            {% include "components/buttons/add_to_cart.html" %}
-            </div> 
-
+            <div class="action-buttons">
+              {% include "components/buttons/buy_now.html" %}
+              {% include "components/buttons/add_to_cart.html" %}
+            </div>
           </article>
         </main>
       </div>
@@ -77,51 +83,41 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Image gallery functionality
-  const mainImage = document.getElementById('main-image');
-  const mainImageLink = document.getElementById('main-image-link');
-  const thumbnails = document.querySelectorAll('.item-thumb');
+    var addToCartBtn = document.getElementById('add-to-cart-btn');
+    
+    function updateAddToCartButton() {
+        var selectedVariantId = document.querySelector('input[name="selected_variant"]:checked').value;
+        // Generate the URL using JavaScript instead of Django template tags
+        addToCartBtn.href = "/orders/cart/add/" + "{{ product.uid }}" + "/" + selectedVariantId + "/";
+    }
 
-  thumbnails.forEach(thumb => {
-    thumb.addEventListener('click', function(e) {
-      e.preventDefault();
-      const newImageSrc = this.getAttribute('data-image');
-      mainImage.src = newImageSrc;
-      mainImageLink.href = newImageSrc;
+    function updatePrice(selectedVariantId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '?variant_uid=' + selectedVariantId, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var response = JSON.parse(xhr.responseText);
+                var priceElement = document.getElementById('product-price');
+                if (priceElement) {
+                    priceElement.innerText = response.price;
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    document.querySelectorAll('.variant-select').forEach(function (element) {
+        element.addEventListener('change', function () {
+            var selectedVariantId = this.value;
+            updateAddToCartButton();
+            updatePrice(selectedVariantId);
+        });
     });
-  });
 
-  // Variant selection and price update
-  const variantSelects = document.querySelectorAll('.variant-select');
-  const priceElement = document.getElementById('product-price');
-
-  variantSelects.forEach(select => {
-    select.addEventListener('change', function() {
-      updatePrice();
-    });
-  });
-
-  function updatePrice() {
-    const selectedColor = document.querySelector('input[name="select_color"]:checked');
-    const selectedSize = document.querySelector('input[name="select_size"]:checked');
-
-    const color = selectedColor ? selectedColor.value : '';
-    const size = selectedSize ? selectedSize.value : '';
-
-    fetch(`?color=${color}&size=${size}`, {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      priceElement.textContent = data.price.toFixed(2);
-    });
-  }
-
-  // Trigger initial price update
-  updatePrice();
+    // Initialize the button's href
+    updateAddToCartButton();
 });
-</script>
 
+</script>
 {% endblock %}

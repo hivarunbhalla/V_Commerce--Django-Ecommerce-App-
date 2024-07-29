@@ -55,13 +55,17 @@
                     placeholder="Coupon code"
                   />
                   <span class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Apply</button>
+                    <button name="apply_coupon" type="submit" class="btn btn-primary">Apply</button>
                   </span>
                 </div>
               </div>
             </form>
-            {% if coupon %}
-            Applied Coupon: <strong> {{ coupon }} </strong>
+            {% if cart_obj.coupon.code %}
+            Applied Coupon: <strong> {{ cart_obj.coupon.code }} </strong>
+            <form method="post" action="{% url 'remove_coupon' cart_obj.uid %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Remove Coupon</button>
+            </form>
             {% endif %}
           </div>
           <!-- card-body.// -->
